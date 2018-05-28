@@ -1,0 +1,36 @@
+*----------------------------------------------------------*
+Resultados version secuencial
+real 3.21
+user 2.98
+sys 0.22
+*----------------------------------------------------------*
+Resultados version paralela con 2 hilos
+real 2.96
+user 3.34
+sys 0.16
+*----------------------------------------------------------*
+Resultados version paralela con 4 hilos
+real 2.98
+user 4.16
+sys 0.50
+*----------------------------------------------------------*
+Resultados version paralela con 8 hilos
+real 3.05
+user 6.74
+sys 0.73
+*----------------------------------------------------------*
+Resultados version paralela con 16 hilos
+real 3.02
+user 6.61
+sys 0.68
+*----------------------------------------------------------*
+Resultados version paralela con 32 hilos
+real 3.08
+user 6.47
+sys 0.78
+*----------------------------------------------------------*
+Resultados version paralela con 64 hilos
+real 3.11
+user 6.29
+sys 0.75
+*----------------------------------------------------------*
