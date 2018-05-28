@@ -15,24 +15,23 @@ if [ ! -f "$file" ] ; then
 	# if file is not created
         touch "$file"
 else
-	read -p "El archivo ya existe, desea sobreescribirlo? : ( s/n ) 	" doit 
-	case $doit in  
-	  s|S) echo sobreescribiendo... 
+	read -p "El archivo ya existe, desea sobreescribirlo? : ( s/n ) 	" doit
+	case $doit in
+	  s|S) echo sobreescribiendo...
 	       rm $file
-	       touch $file;; 
-	  n|N) echo ejecutando... ;; 
-	  *) echo Opcion por defecto: no sobreescribir;; 
+	       touch $file;;
+	  n|N) echo ejecutando... ;;
+	  *) echo Opcion por defecto: no sobreescribir;;
 	esac
 fi
-echo *----------------------------------------------------------* >> "$file"
-echo "Resultados version secuencial" >> "$file"
-time -o "$file" -a -p ./Secuencial/dfs $element
-echo *----------------------------------------------------------* >> "$file"
+sudo echo *----------------------------------------------------------* >> "$file"
+sudo echo "Resultados version secuencial" >> "$file"
+sudo time -o "$file" -a -p ./Secuencial/dfs $element
+sudo echo *----------------------------------------------------------* >> "$file"
 
 for NumThread in 2 4 8 16 32 64
 do
-	echo "Resultados version paralela con $NumThread hilos" >> "$file" 	
-	time -o "$file" -a -p ./OpenMP/dfs $NumThread $element
-	echo *----------------------------------------------------------* >> "$file"
+	sudo echo "Resultados version paralela con $NumThread hilos" >> "$file"
+	sudo time -o "$file" -a -p ./OpenMP/dfs $NumThread $element
+	sudo echo *----------------------------------------------------------* >> "$file"
 done
-
