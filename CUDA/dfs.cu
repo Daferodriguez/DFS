@@ -34,17 +34,19 @@ int lastLvlNodes(int levels){
 }
 
 //On Huge Trees:: can be paralelized
-void makeEdges(int length){
+__global__ void makeEdges(int length){
     int limit = (length/2) - 1;
+    int x = threadIdx.x;
     //printf("Value on limit index: %d \n", tree[limit].n);
-    for(int x = 0; x <= limit; x++){
+    //for(int x = 0; x <= limit; x++){
+    if(x < limit){
         tree[x].left = &tree[(2 * x) + 1];
         tree[x].right = &tree[(2 * x) + 2];
     }
-    for(int y = (limit + 1); y < NODES; y++){
+    /*for(int y = (limit + 1); y < NODES; y++){
         tree[y].left = NULL;
         tree[y].right = NULL;
-    }
+    }*/
 }
 
 //On Huge Trees:: can be paralelized
@@ -124,7 +126,7 @@ int main(int argc, char **argv){
     //makeTree(NODES);
     makeTree<<<1,1>>>(NODES);
 
-    cudaMemcpy(&tree, d_tree, cudaMemcpyDeviceToHost);
+    //cudaMemcpy(&tree, d_tree, cudaMemcpyDeviceToHost);
 
     //END
     /*for(int i; i < NODES; i++){
@@ -132,9 +134,10 @@ int main(int argc, char **argv){
     }*/
     //printf("Levels %d \n", lvlNumber(NODES));
     //printf("Last Level Nodes %d \n", lastLvlNodes(lvlNumber(NODES)));
-    makeEdges(NODES);
+    //makeEdges(NODES);
+    makeEdges<<<1,1>>>(NODES);
 
-    cudaMemcpy(d_tree, &tree, cudaMemcpyHostToDevice);
+    //cudaMemcpy(d_tree, &tree, cudaMemcpyHostToDevice);
 
     //findParents();
     findParents<<<1,1>>>(NODES);
