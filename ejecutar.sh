@@ -35,3 +35,10 @@ do
 	sudo time -o "$file" -a -p ./OpenMP/dfs $NumThread $element
 	sudo echo *----------------------------------------------------------* >> "$file"
 done
+
+for NumThread in 2 4 8 16 32 64
+do
+	sudo echo "Resultados version mpi con $NumThread hilos" >> "$file"
+	sudo time -o "$file" -a -p ./OpenMP/dfs $NumThread $element -np 4
+	sudo echo *----------------------------------------------------------* >> "$file"
+done
