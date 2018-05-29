@@ -39,6 +39,6 @@ done
 for NumThread in 2 4 8 16 32 64
 do
 	sudo echo "Resultados version mpi con $NumThread hilos" >> "$file"
-	time -o "$file" -a -p mpirun -np 4 ./OpenMP/dfs $NumThread $element
+	time -o "$file" -a -p mpirun -np 2 ./OpenMP/dfs $NumThread $element
 	sudo echo *----------------------------------------------------------* >> "$file"
 done
