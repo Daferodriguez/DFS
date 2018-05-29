@@ -148,7 +148,7 @@ int main(int argc, char **argv){
     //DFS(67108863);
     ss << argv[2];
     ss >> to_find;
-    #pragma omp parallel atomic num_threads(hilos)
+    #pragma omp parallel
     DFS(to_find);
     ss.clear();
     free(tree);
