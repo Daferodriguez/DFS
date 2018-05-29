@@ -9,5 +9,5 @@ g++ dfs.cpp -o dfs -lm -fopenmp
 echo "Codigo omp compilado exitosamente..."
 echo "Accediendo a la version MPI..."
 cd ../MPI
-mpicxx dfs.c -o dfs -lm -fopenmp
+mpicxx dfs.cpp -o dfs -lm -fopenmp
 echo "Codigo ompi compilado exitosamente..."
