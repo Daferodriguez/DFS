@@ -39,12 +39,12 @@ void makeEdges(int length, int hilos){
     int limit = (length/2) - 1;
     //printf("Value on limit index: %d \n", tree[limit].n);
 	omp_set_num_threads(hilos);
-	#pragma omp parallel for
+	#pragma omp parallel for num_threads(hilos)
     for(int x = 0; x <= limit; x++){
         tree[x].left = &tree[(2 * x) + 1];
         tree[x].right = &tree[(2 * x) + 2];
     }
-	#pragma omp parallel for
+	#pragma omp parallel for num_threads(hilos)
     for(int y = (limit + 1); y < NODES; y++){
         tree[y].left = NULL;
         tree[y].right = NULL;
@@ -54,7 +54,7 @@ void makeEdges(int length, int hilos){
 //On Huge Trees:: can be paralelized
 void findParents(int hilos){
 	omp_set_num_threads(hilos);
-	#pragma omp parallel for
+	#pragma omp parallel for num_threads(hilos)
     for(int x = 0; x < NODES; x++){
         if(x == 0){
             tree[x].parent = NULL;
@@ -69,7 +69,7 @@ void findParents(int hilos){
 void makeTree(int hilos){
     toArray(&tree, NODES);
     omp_set_num_threads(hilos);
-	#pragma omp parallel for
+	#pragma omp parallel for num_threads(hilos)
     for(int x = 0; x < NODES; x++){
         tree[x].n = x + 1;
         tree[x].visited = false;
@@ -89,7 +89,7 @@ void DFS(int element, int hilos){
     bool found = false;
     queue <int> path;
     node *temp = &tree[0];
-    #pragma omp parallel
+    #pragma omp parallel num_threads(hilos)
 	{
 		do{
 			//printf("On node with element %d \n", temp->n);
