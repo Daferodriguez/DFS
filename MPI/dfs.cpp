@@ -123,9 +123,11 @@ void DFS(int element){
 }
 
 int main(int argc, char **argv){
-    MPI_Init(&n, &argv);
+    MPI_Init(&argc, &argv);
+    int processId, numprocs;
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &processId);
+    if (processId == 0) printf("\nLaunching with %i processes", numprocs);
 	  int to_find = 0;
     int hilos = 0;
     stringstream ss;
