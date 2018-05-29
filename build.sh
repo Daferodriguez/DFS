@@ -7,4 +7,7 @@ echo "Accediendo a la version OMP"
 cd ../OpenMP
 g++ dfs.cpp -o dfs -lm -fopenmp
 echo "Codigo omp compilado exitosamente..."
-
+echo "Accediendo a la version MPI..."
+cd ../MPI
+mpixx dfs.c -o dfs -lm -fopenmp
+echo "Codigo ompi compilado exitosamente..."
