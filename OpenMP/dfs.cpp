@@ -38,22 +38,30 @@ void makeEdges(int length, int hilos){
     int limit = (length/2) - 1;
     //printf("Value on limit index: %d \n", tree[limit].n);
 	omp_set_num_threads(hilos);
-	#pragma omp parallel for num_threads(hilos)
+	#pragma omp parallel num_threads(hilos)
+  {
+    #pragma omp for
     for(int x = 0; x <= limit; x++){
         tree[x].left = &tree[(2 * x) + 1];
         tree[x].right = &tree[(2 * x) + 2];
     }
-	#pragma omp parallel for num_threads(hilos)
+  }
+	#pragma omp parallel num_threads(hilos)
+  {
+    #pragma omp for
     for(int y = (limit + 1); y < NODES; y++){
         tree[y].left = NULL;
         tree[y].right = NULL;
     }
+  }
 }
 
 //On Huge Trees:: can be paralelized
 void findParents(int hilos){
 	omp_set_num_threads(hilos);
-	#pragma omp parallel for num_threads(hilos)
+	#pragma omp parallel num_threads(hilos)
+  {
+    #pragma omp for
     for(int x = 0; x < NODES; x++){
         if(x == 0){
             tree[x].parent = NULL;
@@ -62,17 +70,21 @@ void findParents(int hilos){
             tree[x].parent = &tree[par];
         }
     }
+  }
 }
 
 //On Huge Trees:: can be paralelized
 void makeTree(int hilos){
     toArray(&tree, NODES);
     omp_set_num_threads(hilos);
-	#pragma omp parallel for num_threads(hilos)
+	#pragma omp parallel num_threads(hilos)
+  {
+    #pragma omp for
     for(int x = 0; x < NODES; x++){
         tree[x].n = x + 1;
         tree[x].visited = false;
     }
+  }
 }
 
 bool hasChildren(node n){
@@ -89,32 +101,32 @@ void DFS(int element, int hilos){
     queue <int> path;
     node *temp = &tree[0];
     #pragma omp parallel num_threads(hilos)
-	{
-		do{
-			//printf("On node with element %d \n", temp->n);
-			if(temp->n != element){
-				path.push(temp->n);
-			    if (hasChildren(*temp)){
-			        if(temp->left->visited == false){
-			            temp = temp->left;
-			        }else if(temp->right->visited == false){
-						temp = temp->right;
-					}else{
-						temp->visited = true;
-						temp = temp->parent;
-					}
-			    }else{
-			        temp->visited = true;
-			        temp = temp->parent;
-			    }
-			}else{
-			    found = true;
-			    path.push(temp->n);
-			    printf("Element Found!: %d \n", temp->n);
-			}
-		}while(found == false);
-	}
-/*    while(!path.empty()){
+	  {
+  		do{
+  			//printf("On node with element %d \n", temp->n);
+  			if(temp->n != element){
+  				path.push(temp->n);
+  			    if (hasChildren(*temp)){
+  			        if(temp->left->visited == false){
+  			            temp = temp->left;
+  			        }else if(temp->right->visited == false){
+  						temp = temp->right;
+  					}else{
+  						temp->visited = true;
+  						temp = temp->parent;
+  					}
+  			    }else{
+  			        temp->visited = true;
+  			        temp = temp->parent;
+  			    }
+  			}else{
+  			    found = true;
+  			    path.push(temp->n);
+  			    printf("Element Found!: %d \n", temp->n);
+  			}
+  		}while(found == false);
+	   }
+  /*while(!path.empty()){
 		printf(" %d ", path.front());
 		path.pop();
 	}
