@@ -100,9 +100,6 @@ void DFS(int element, int hilos){
     bool found = false;
     queue <int> path;
     node *temp = &tree[0];
-    omp_set_num_threads(hilos);
-    #pragma omp parallel
-	  {
   		do{
   			//printf("On node with element %d \n", temp->n);
   			if(temp->n != element){
@@ -126,7 +123,6 @@ void DFS(int element, int hilos){
   			    printf("Element Found!: %d \n", temp->n);
   			}
   		}while(found == false);
-	   }
   /*while(!path.empty()){
 		printf(" %d ", path.front());
 		path.pop();
