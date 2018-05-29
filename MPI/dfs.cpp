@@ -85,10 +85,11 @@ bool hasChildren(node n){
 }
 
 //The Interesting Part!!
-void DFS(int element){
+void DFS(int element, int hilos){
     bool found = false;
     queue <int> path;
     node *temp = &tree[0];
+    #pragma omp parallel num_threads(hilos)
 	{
 		do{
 			//printf("On node with element %d \n", temp->n);
@@ -155,8 +156,7 @@ int main(int argc, char **argv){
     //DFS(67108863);
     ss << argv[2];
     ss >> to_find;
-    #pragma omp parallel num_threads(hilos)
-    DFS(to_find);
+    DFS(to_find, hilos);
     ss.clear();
     free(tree);
     return(0);
