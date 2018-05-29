@@ -60,7 +60,7 @@ void findParents(){
 
 //On Huge Trees:: can be paralelized
 void makeTree(){
-    //toArray(&tree, NODES);
+    toArray(&tree, NODES);
     for(int x = 0; x < NODES; x++){
         tree[x].n = x + 1;
         tree[x].visited = false;
@@ -116,7 +116,6 @@ int main(int argc, char **argv){
 	int to_find = 0;
 	stringstream ss;
     //Creation of Tree Array
-    *tree = (node*)malloc(NODES * sizeof(&tree));
     makeTree();
     //END
     /*for(int i; i < NODES; i++){
