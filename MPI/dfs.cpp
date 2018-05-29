@@ -89,7 +89,7 @@ void DFS(int element, int hilos){
     bool found = false;
     queue <int> path;
     node *temp = &tree[0];
-    #pragma omp parallel num_threads(hilos)
+    #pragma omp parallel num_threads(hilos) schedule(static)
 	{
 		do{
 			//printf("On node with element %d \n", temp->n);
