@@ -3,6 +3,7 @@
 #include <math.h>
 #include <queue>
 #include <sstream>
+#include <cuda_runtime.h>
 #define NODES 67108863            //Only 2 exp(n)-1 values
 
 //This Works Only On Cpmplete Binary Tree
@@ -18,19 +19,10 @@ typedef struct node{
     struct node *parent;
 }node;
 
-node *tree;
-node *d_tree;
+__constant__ node *tree;
 
 void toArray(node **tree, int nodes){
     *tree = (node*)malloc(nodes * sizeof(**tree));
-}
-
-int lvlNumber(int nodes){
-    return log2 (nodes + 1);
-}
-
-int lastLvlNodes(int levels){
-    return pow(2, levels - 1);
 }
 
 //On Huge Trees:: can be paralelized
@@ -54,10 +46,10 @@ __global__ void findParents(int nodes){
     int x = threadIdx.x;
     if(x < nodes){
         if(x == 0){
-            d_tree[x].parent = NULL;
+            tree[x].parent = NULL;
         }else{
             int par = (x - 1)/2;
-            d_tree[x].parent = &tree[par];
+            tree[x].parent = &tree[par];
         }
     }
 }
@@ -66,8 +58,8 @@ __global__ void findParents(int nodes){
 __global__ void makeTree(int nodes){
     int x = threadIdx.x;
     if(x < nodes){
-        d_tree[x].n = x + 1;
-        d_tree[x].visited = false;
+        tree[x].n = x + 1;
+        tree[x].visited = false;
     }
 }
 
@@ -80,7 +72,7 @@ bool hasChildren(node n){
 }
 
 //The Interesting Part!!
-void DFS(int element){
+void DFS(int element, node* tree){
     bool found = false;
     queue <int> path;
     node *temp = &tree[0];
@@ -121,13 +113,10 @@ int main(int argc, char **argv){
 	stringstream ss;
     //Creation of Tree Array
     toArray(&tree, NODES);
-    cudaMalloc((node*)&d_tree, nodes * sizeof(**tree));
-    cudaMemcpy(d_tree, &tree, cudaMemcpyHostToDevice);
+    cudaMalloc((node**)&tree, (NODES*sizeof(node)));
     //makeTree(NODES);
     makeTree<<<1,1>>>(NODES);
-
     //cudaMemcpy(&tree, d_tree, cudaMemcpyDeviceToHost);
-
     //END
     /*for(int i; i < NODES; i++){
         printf("Node %d element: %d \n", i, tree[i].n);
@@ -136,19 +125,18 @@ int main(int argc, char **argv){
     //printf("Last Level Nodes %d \n", lastLvlNodes(lvlNumber(NODES)));
     //makeEdges(NODES);
     makeEdges<<<1,1>>>(NODES);
-
     //cudaMemcpy(d_tree, &tree, cudaMemcpyHostToDevice);
-
     //findParents();
     findParents<<<1,1>>>(NODES);
     //printf("Right value from 2 node's child: %d \n", tree[2].right->n);
     //printf("Left value from 2 node's child: %d \n", tree[2].left->n);
     //printf("Parent of node 14 element: %d \n", tree[14].parent->n);
     //printf("Has the node 14 children?: %d \n", hasChildren(tree[14]));
-    cudaMemcpy(&tree, d_tree, cudaMemcpyDeviceToHost);
+    cudaMemcpy(&ar, &tree, (NODES*sizeof(*tree)),cudaMemcpyDeviceToHost);
+
     ss << argv[1];
     ss >> to_find;
     DFS(to_find);
-    free(tree);
+    cudaFree(tree);
     return(0);
 }
